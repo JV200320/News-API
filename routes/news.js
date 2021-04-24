@@ -43,4 +43,37 @@ router.get('/user', WithAuth, async (req, res) => {
   }
 })
 
+router.get('/', WithAuth, async (req, res) => {
+  let news = await News.find()
+  try {
+    res.status(200).json({ news })
+  } catch (error) {
+    res.json({ error: error }).status(500)
+  }
+})
+
+router.get('/search', WithAuth, async (req, res) => {
+  const { query } = req.query;
+  try {
+    let news = await News
+      .find({ $text: { $search: query } });
+    res.json(news).status(200);
+  } catch (error) {
+    res.json({ error: error }).status(500)
+  }
+})
+
+router.get('/search/:id', WithAuth, async (req, res) => {
+  const { query } = req.query;
+  const { id } = req.params
+  try {
+    let news = await News
+      .find({ posted_by: id })
+      .find({ $text: { $search: query } });
+    res.json(news).status(200);
+  } catch (error) {
+    res.json({ error: error }).status(500)
+  }
+})
+
 module.exports = router;

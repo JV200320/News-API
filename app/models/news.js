@@ -33,4 +33,6 @@ newsSchema.post('remove', async (news) => {
   }
 })
 
+newsSchema.index({ 'title': 'text', 'body': 'text' });
+
 module.exports = mongoose.model('News', newsSchema);
