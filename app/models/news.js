@@ -22,4 +22,15 @@ newsSchema.post('save', async (news) => {
   }
 })
 
+newsSchema.post('remove', async (news) => {
+  try {
+    let user = await User.findById(news.posted_by)
+    let index = user.news.indexOf(news._id)
+    user.news.splice(index, 1)
+    await user.save()
+  } catch (error) {
+    console.log(error)
+  }
+})
+
 module.exports = mongoose.model('News', newsSchema);
